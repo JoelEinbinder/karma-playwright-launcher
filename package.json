@@ -15,6 +15,6 @@
   "author": "Joel Einbinder",
   "license": "MIT",
   "dependencies": {
-    "playwright": "^0.11.1"
+    "playwright": "^0.12.1"
   }
 }
