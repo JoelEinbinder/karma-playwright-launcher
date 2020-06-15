@@ -14,7 +14,7 @@
   ],
   "author": "Joel Einbinder",
   "license": "MIT",
-  "dependencies": {
-    "playwright": "^0.12.1"
+  "peerDependencies": {
+    "playwright": "1.x"
   }
 }
