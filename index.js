@@ -27,7 +27,9 @@ class PwBrowser extends EventEmitter {
     }
 
     async forceKill() {
-        await this._browser.close();
+        if (this._browser) {
+            await this._browser.close();
+        }
     }
 }
 
