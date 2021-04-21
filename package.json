@@ -1,6 +1,6 @@
 {
   "name": "karma-playwright-launcher",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Karma launcher plugin powered by playwright.",
   "repository": "github:JoelEinbinder/karma-playwright-launcher",
   "main": "index.js",
