@@ -5,21 +5,23 @@ class PwBrowser extends EventEmitter {
     /**
      * @param {import('playwright').BrowserType} browserType
      */
-    constructor(browserType) {
+    constructor(browserType, name, headless, args) {
         super();
         this._browserType = browserType;
-        this.name = browserType.name();
+        this._headless = headless;
+        this._args = args;
+        this.name = name;
         this.id = Math.random();
     }
 
     /**
-     * @param {string} url 
+     * @param {string} url
      */
     async start(url) {
-        this._browser = await this._browserType.launch({headless: true});
+        this._browser = await this._browserType.launch({ headless: this._headless, ...this._args.launchOptions });
         this._browser.on('close', () => this.emit('done'));
         const page = await this._browser.newPage();
-        await page.goto(`${url}?id=${this.id}`);
+        await page.goto(`${url}?id=${this.id}&displayName=${encodeURIComponent(this.displayName || this.name)}`);
     }
 
     isCaptured() {
@@ -34,22 +36,35 @@ class PwBrowser extends EventEmitter {
 }
 
 // Karma actually parses the function.toString, so we can't pass in the class.
-function ChromiumBrowserWrapper() {
-    return new PwBrowser(chromium);
+function ChromiumBrowserWrapper(args) {
+    return new PwBrowser(chromium, 'Chromium', false, args);
 }
 
-// Karma actually parses the function.toString, so we can't pass in the class.
-function FirefoxBrowserWrapper() {
-    return new PwBrowser(firefox);
+function ChromiumHeadlessBrowserWrapper(args) {
+    return new PwBrowser(chromium, 'ChromiumHeadless', true, args);
 }
 
-// Karma actually parses the function.toString, so we can't pass in the class.
-function WebKitBrowserWrapper() {
-    return new PwBrowser(webkit);
+function FirefoxBrowserWrapper(args) {
+    return new PwBrowser(firefox, 'Firefox', false, args);
+}
+
+function FirefoxHeadlessBrowserWrapper(args) {
+    return new PwBrowser(firefox, 'FirefoxHeadless', true, args);
+}
+
+function WebKitBrowserWrapper(args) {
+    return new PwBrowser(webkit, 'WebKit', false, args);
+}
+
+function WebKitHeadlessBrowserWrapper(args) {
+    return new PwBrowser(webkit, 'WebKitHeadless', true, args);
 }
 
 module.exports = {
-  'launcher:Chromium': ['type', ChromiumBrowserWrapper],
-  'launcher:Firefox': ['type', FirefoxBrowserWrapper],
-  'launcher:WebKit': ['type', WebKitBrowserWrapper],
+  'launcher:Chromium':         ['type', ChromiumBrowserWrapper],
+  'launcher:ChromiumHeadless': ['type', ChromiumHeadlessBrowserWrapper],
+  'launcher:Firefox':          ['type', FirefoxBrowserWrapper],
+  'launcher:FirefoxHeadless':  ['type', FirefoxHeadlessBrowserWrapper],
+  'launcher:WebKit':           ['type', WebKitBrowserWrapper],
+  'launcher:WebKitHeadless':   ['type', WebKitHeadlessBrowserWrapper],
 }
