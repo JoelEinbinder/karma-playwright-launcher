@@ -1,5 +1,5 @@
 const EventEmitter = require('events');
-const {webkit, chromium, firefox} = require('playwright');
+const {devices, webkit, chromium, firefox} = require('playwright');
 
 class PwBrowser extends EventEmitter {
     /**
@@ -20,7 +20,7 @@ class PwBrowser extends EventEmitter {
     async start(url) {
         this._browser = await this._browserType.launch({ headless: this._headless, ...this._args.launchOptions });
         this._browser.on('close', () => this.emit('done'));
-        const page = await this._browser.newPage();
+        const page = await this._browser.newPage({ ...devices[this._args.device], ...this._args.contextOptions });
         await page.goto(`${url}?id=${this.id}&displayName=${encodeURIComponent(this.displayName || this.name)}`);
     }
 

@@ -11,6 +11,34 @@ Provides six browsers to [Karma](https://karma-runner.github.io/):
 
 Powered by [Playwright](https://github.com/microsoft/playwright).
 
+## Device emulation
+
+Playwright supports [device emulation](https://playwright.dev/docs/emulation) to control various aspects of the browser.
+This is probably more important for E2E testing than unit testing, but some configuration (like locale and timezone) may
+be useful for unit testing as well.
+
+You can control these settings by providing `device` and/or [`contextOptions`](https://playwright.dev/docs/next/api/class-browser#browsernewcontextoptions) in `karma.conf.js`.
+
+```js
+    ...
+    customLaunchers: {
+        iPhone: {
+            base: 'WebKit',
+            displayName: 'iPhone',
+            device: 'iPhone 6',
+            contextOptions: {
+                locale: 'sv-SE'
+            }
+        }
+    },
+
+    browsers: [
+        'iPhone',
+    ],
+    ...
+```
+
+
 ## Non-bundled browsers
 
 The "real" Chrome, Edge or custom versions of the browsers can be configured by providing
