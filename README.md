@@ -9,6 +9,10 @@ Provides six browsers to [Karma](https://karma-runner.github.io/):
 * `WebKit`
 * `WebKitHeadless`
 
+Powered by [Playwright](https://github.com/microsoft/playwright).
+
+## Non-bundled browsers
+
 The "real" Chrome, Edge or custom versions of the browsers can be configured by providing
 [`launchOptions`](https://playwright.dev/docs/api/class-browsertype#browsertypelaunchoptions) in your Karma
 configuration. The browsers must be downloaded and installed manually.
@@ -37,4 +41,12 @@ configuration. The browsers must be downloaded and installed manually.
 Valid values for the `channel` option are: `chrome`, `chrome-beta`, `chrome-dev`, `chrome-canary`, `msedge`,
 `msedge-beta`, `msedge-dev`, `msedge-canary`.
 
-Powered by [playwright](https://github.com/microsoft/playwright).
+## Older browsers
+
+Each Playwright release bundles specific versions of Chromium, Firefox and WebKit. If you use
+[Yarn](https://classic.yarnpkg.com/en/docs/selective-version-resolutions/) or
+[pnpm](https://pnpm.io/package_json#pnpmoverrides), it's possible you may lock the version of the `playwright` package
+in order to force a specific version. [npm](https://github.com/npm/rfcs/blob/latest/accepted/0036-overrides.md) does not
+support this yet, but there is a [package](https://www.npmjs.com/package/npm-force-resolutions) available that might work.
+
+See the [Playwright Release Notes](https://playwright.dev/versions/) for what browsers are bundled.
