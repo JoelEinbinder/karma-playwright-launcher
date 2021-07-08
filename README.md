@@ -1,4 +1,6 @@
-# karma-playwright-launcher
+# @onslip/karma-playwright-launcher
+
+[![npm version](https://badge.fury.io/js/%40onslip%karma-playwright-launcher.svg)](https://badge.fury.io/js/%40onslip%karma-playwright-launcher)
 
 Provides six browsers to [Karma](https://karma-runner.github.io/):
 
@@ -37,7 +39,6 @@ You can control these settings by providing `device` and/or [`contextOptions`](h
     ],
     ...
 ```
-
 
 ## Non-bundled browsers
 
