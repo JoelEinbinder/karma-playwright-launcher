@@ -1,53 +1,77 @@
-const EventEmitter = require('events');
-const {webkit, chromium, firefox} = require('playwright');
+const {devices, webkit, chromium, firefox} = require('playwright');
 
-class PwBrowser extends EventEmitter {
-    /**
-     * @param {import('playwright').BrowserType} browserType
-     */
-    constructor(browserType) {
-        super();
-        this._browserType = browserType;
-        this.name = browserType.name();
-        this.id = Math.random();
-    }
-
-    /**
-     * @param {string} url 
-     */
-    async start(url) {
-        this._browser = await this._browserType.launch({headless: true});
-        this._browser.on('close', () => this.emit('done'));
-        const page = await this._browser.newPage();
-        await page.goto(`${url}?id=${this.id}`);
-    }
-
-    isCaptured() {
-        return true;
-    }
-
-    async forceKill() {
-        await this._browser.close();
-    }
+function applyDecorators(self, baseLauncherDecorator, captureTimeoutLauncherDecorator, retryLauncherDecorator) {
+    baseLauncherDecorator(self);
+    captureTimeoutLauncherDecorator(self);
+    retryLauncherDecorator(self);
 }
 
-// Karma actually parses the function.toString, so we can't pass in the class.
-function ChromiumBrowserWrapper() {
-    return new PwBrowser(chromium);
+function pwBrowser(self, name, browserType, headless, args, logger) {
+    self.name = self.displayName = name;
+
+    self.on("start", async (url) => {
+        const log = logger.create(self.displayName);
+
+        try {
+            self._browser = await browserType.launch({ headless, ...args.launchOptions });
+
+            const page = await self._browser.newPage({ ...devices[args.device], ...args.contextOptions });
+            await page.goto(url);
+        } catch (err) {
+            log.error(err);
+            self._done("failure");
+        }
+    });
+
+    self.on("kill", async (done) => {
+        const log = logger.create(self.displayName);
+
+        try {
+            self._browser && await self._browser.close();
+        } catch (err) {
+            log.error(err);
+        }
+
+        self._done();
+        return process.nextTick(done);
+    });
 }
 
-// Karma actually parses the function.toString, so we can't pass in the class.
-function FirefoxBrowserWrapper() {
-    return new PwBrowser(firefox);
+function ChromiumBrowser(args, logger, baseLauncherDecorator, captureTimeoutLauncherDecorator, retryLauncherDecorator) {
+    applyDecorators(this, baseLauncherDecorator, captureTimeoutLauncherDecorator, retryLauncherDecorator);
+    pwBrowser(this, 'Chromium', chromium, false, args, logger);
 }
 
-// Karma actually parses the function.toString, so we can't pass in the class.
-function WebKitBrowserWrapper() {
-    return new PwBrowser(webkit);
+function ChromiumHeadlessBrowser(args, logger, baseLauncherDecorator, captureTimeoutLauncherDecorator, retryLauncherDecorator) {
+    applyDecorators(this, baseLauncherDecorator, captureTimeoutLauncherDecorator, retryLauncherDecorator);
+    pwBrowser(this, 'ChromiumHeadless', chromium, true, args, logger);
+}
+
+function FirefoxBrowser(args, logger, baseLauncherDecorator, captureTimeoutLauncherDecorator, retryLauncherDecorator) {
+    applyDecorators(this, baseLauncherDecorator, captureTimeoutLauncherDecorator, retryLauncherDecorator);
+    pwBrowser(this, 'Firefox', firefox, false, args, logger);
+}
+
+function FirefoxHeadlessBrowser(args, logger, baseLauncherDecorator, captureTimeoutLauncherDecorator, retryLauncherDecorator) {
+    applyDecorators(this, baseLauncherDecorator, captureTimeoutLauncherDecorator, retryLauncherDecorator);
+    pwBrowser(this, 'FirefoxHeadless', firefox, true, args, logger);
+}
+
+function WebKitBrowser(args, logger, baseLauncherDecorator, captureTimeoutLauncherDecorator, retryLauncherDecorator) {
+    applyDecorators(this, baseLauncherDecorator, captureTimeoutLauncherDecorator, retryLauncherDecorator);
+    pwBrowser(this, 'WebKit', webkit, false, args, logger);
+}
+
+function WebKitHeadlessBrowser(args, logger, baseLauncherDecorator, captureTimeoutLauncherDecorator, retryLauncherDecorator) {
+    applyDecorators(this, baseLauncherDecorator, captureTimeoutLauncherDecorator, retryLauncherDecorator);
+    pwBrowser(this, 'WebKitHeadless', webkit, true, args, logger);
 }
 
 module.exports = {
-  'launcher:Chromium': ['type', ChromiumBrowserWrapper],
-  'launcher:Firefox': ['type', FirefoxBrowserWrapper],
-  'launcher:WebKit': ['type', WebKitBrowserWrapper],
+  'launcher:Chromium':         ['type', ChromiumBrowser],
+  'launcher:ChromiumHeadless': ['type', ChromiumHeadlessBrowser],
+  'launcher:Firefox':          ['type', FirefoxBrowser],
+  'launcher:FirefoxHeadless':  ['type', FirefoxHeadlessBrowser],
+  'launcher:WebKit':           ['type', WebKitBrowser],
+  'launcher:WebKitHeadless':   ['type', WebKitHeadlessBrowser],
 }

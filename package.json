@@ -1,8 +1,8 @@
 {
-  "name": "karma-playwright-launcher",
-  "version": "0.0.1",
+  "name": "@onslip/karma-playwright-launcher",
+  "version": "0.3.0",
   "description": "Karma launcher plugin powered by playwright.",
-  "repository": "github:JoelEinbinder/karma-playwright-launcher",
+  "repository": "github:Onslip/karma-playwright-launcher",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -13,8 +13,9 @@
     "playwright"
   ],
   "author": "Joel Einbinder",
+  "contributors": [ "Martin Blom <martin.blom@onslip.com>" ],
   "license": "MIT",
   "dependencies": {
-    "playwright": "^0.12.1"
+    "playwright": "^1.0.0"
   }
 }
