@@ -1,6 +1,6 @@
 {
   "name": "@onslip/karma-playwright-launcher",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "Karma launcher plugin powered by playwright.",
   "repository": "github:Onslip/karma-playwright-launcher",
   "main": "index.js",

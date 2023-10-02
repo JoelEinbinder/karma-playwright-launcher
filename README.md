@@ -49,9 +49,9 @@ configuration. The browsers must be downloaded and installed manually.
 ```js
     ...
     customLaunchers: {
-        HeadlessEdge: {
-            base: 'HeadlessChromium',
-            displayName: 'HeadlessEdge',
+        EdgeHeadless: {
+            base: 'ChromiumHeadless',
+            displayName: 'EdgeHeadless',
             launchOptions: {
                 channel: 'msedge'
             }
@@ -59,10 +59,10 @@ configuration. The browsers must be downloaded and installed manually.
     },
 
     browsers: [
-        'HeadlessChromium',
-        'HeadlessEdge',
-        'HeadlessFirefox',
-        'HeadlessWebKit',
+        'ChromiumHeadless',
+        'EdgeHeadless',
+        'FirefoxHeadless',
+        'WebKitHeadless',
     ],
     ...
 ```
@@ -79,3 +79,31 @@ in order to force a specific version. [npm](https://github.com/npm/rfcs/blob/lat
 support this yet, but there is a [package](https://www.npmjs.com/package/npm-force-resolutions) available that might work.
 
 See the [Playwright Release Notes](https://playwright.dev/versions/) for what browsers are bundled.
+
+## History
+
+### 0.3.0
+
+* Martin Blom: Now uses the Karma decorators and event handling instead of a custom class.
+
+### 0.2.1
+
+* Martin Blom: Fixed typo. Bumped rev.
+
+### 0.2.0
+
+* Martin Blom: Publish forked package as `@onslip/karma-playwright-launcher`.
+* Martin Blom: Added device emulation support.
+
+### 0.1.1
+
+* Martin Blom: Relaxed required playwright version and added note about pinning.
+
+### 0.1.0
+
+* Martin Blom: Provide both headful and headless browsers, support custom launch options.
+* Emil Björklund: Add guard for missing browser.
+
+### 0.0.1
+
+* Joel Einbinder/Endy Jasmi: Original version, published as `karma-playwright-launcher`.
